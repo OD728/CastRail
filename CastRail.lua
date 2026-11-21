@@ -355,11 +355,31 @@ local ART = { "Border", "BorderShield", "TextBorder", "StandardGlow", "Flash", "
 local own = setmetatable({}, { __mode = "k" })
 local busy = false   -- set while we change a bar, so our own hooks don't loop
 
-local function setArtAlpha(frame, alpha)
+-- Modern: fade the art, first noting each piece's own alpha. Many are glows the
+-- game keeps at 0 and only flashes (InterruptGlow is red), so Classic must put
+-- back exactly what was there, never a blanket 1.
+local function fadeArt(frame, p)
+    p.savedAlpha = p.savedAlpha or {}
     for _, k in ipairs(ART) do
         local t = frame[k]
-        if type(t) == "table" and t.SetAlpha then pcall(t.SetAlpha, t, alpha) end
+        if type(t) == "table" and t.SetAlpha and t.GetAlpha then
+            if p.savedAlpha[k] == nil then
+                local ok, a = pcall(t.GetAlpha, t)
+                p.savedAlpha[k] = ok and a or 1
+            end
+            pcall(t.SetAlpha, t, 0)
+        end
     end
+end
+
+-- Classic: undo fadeArt, if Modern ran this session. Nothing else is touched.
+local function restoreArt(frame, p)
+    if not p.savedAlpha then return end
+    for k, a in pairs(p.savedAlpha) do
+        local t = frame[k]
+        if type(t) == "table" and t.SetAlpha then pcall(t.SetAlpha, t, a) end
+    end
+    p.savedAlpha = nil
 end
 
 local SHADOW_STEPS, SHADOW_ALPHA = 4, 0.14   -- 4 px wide; ~45% dark by the edge
@@ -440,7 +460,7 @@ local function layoutModern(frame, kind, p)
     local h = small and math.max(8, db.height - 6) or db.height
     local e = db.border
     frame:SetSize(w, h)
-    setArtAlpha(frame, 0)
+    fadeArt(frame, p)
     p.back:Show()
     placeEdges(p, frame, e)
 
@@ -499,7 +519,7 @@ end
 
 -- The classic skin: the game's frame and text spot stay; only the font changes.
 local function layoutClassic(frame, kind, p)
-    setArtAlpha(frame, 1)
+    restoreArt(frame, p)
     p.back:Hide()
     placeEdges(p, frame, 0)
     p.iconEdge:Hide()

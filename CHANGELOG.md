@@ -1,5 +1,10 @@
 # Cast Rail changelog
 
+## 1.0.1
+
+- Minor fixes.
+- The classic skin no longer shows a red glow around the cast bar.
+
 ## 1.0
 
 First release.

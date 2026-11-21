@@ -2,7 +2,7 @@
 ## Title: |cffcca3ffCast Rail|r
 ## Notes: Restyles the cast bars: a flat modern skin or one that fits the classic UI, with color sets and bar textures. /castrail for options.
 ## Notes-deDE: Gestaltet die Zauberleisten neu: ein flacher moderner Stil oder einer passend zur klassischen Oberfläche, mit Farbsets und Leistentexturen. /castrail für Optionen.
-## Version: 1.0
+## Version: 1.0.1
 ## Author: Ron
 ## X-License: MIT
 ## X-Curse-Project-ID: 1821288
