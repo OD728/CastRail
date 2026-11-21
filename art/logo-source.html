@@ -78,6 +78,9 @@ function scrawl(text, x, y, size, color) {
 // A spell icon with a flaming star, then two cast bars: the flat modern one and the
 // gold-framed classic one. Both half-way through a cast, with a spark at the fill's end.
 
+// Shifted down so the picture sits in the middle.
+g.save(); g.translate(0, 16);
+
 // Icon square with a fire burst.
 shape(rect(40, 96, 128, 128), '#2a1840', [5, 4], 8);
 shape(star(104, 160, 52, 22), '#ff9922', [4, -3], 5);
@@ -100,8 +103,7 @@ stroke(rect(40, 300, 436, 72), '#ffcc33', 10, 3, true);
 stroke(rect(28, 288, 460, 96), '#cc8822', 5, 3, true);
 stroke(star(40 + cw, 336, 26, 10), INK, 4, 2, true);
 
-// Scribbled cast time.
-scrawl('1.2', 440, 440, 54, '#ffffff');
+g.restore();
 
 // MS Paint has no smoothing: snap every pixel to the nearest color this page used.
 const palette = [...used].map(h => [1, 3, 5].map(i => parseInt(h.length === 4 ? h[(i + 1) / 2].repeat(2) : h.substr(i, 2), 16)));
